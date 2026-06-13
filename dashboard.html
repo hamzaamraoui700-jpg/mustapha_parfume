@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maison Control Panel | Administration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background-color: #060807; color: #f3f4f6; }
+        .luxury-font { font-family: 'Cinzel', serif; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="min-h-screen flex flex-col lg:flex-row">
+        <aside class="w-full lg:w-64 bg-black border-r border-zinc-900 p-6 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-3 mb-10 pb-6 border-b border-zinc-900/60">
+                    <img src="logo.jpg" alt="Logo" class="h-12 w-12 rounded-full object-cover border border-zinc-800">
+                    <div>
+                        <h1 class="luxury-font text-xs font-bold tracking-widest text-[#d4af37]">MUSTAPHA</h1>
+                        <p class="text-[9px] uppercase text-zinc-500 tracking-widest">Maison Admin</p>
+                    </div>
+                </div>
+                <nav class="space-y-1.5">
+                    <a href="#" class="flex items-center gap-3 bg-zinc-900 text-[#d4af37] px-4 py-3 rounded-lg text-xs font-semibold uppercase tracking-wider">
+                        <i class="fas fa-sliders text-sm"></i><span>Overview Terminal</span>
+                    </a>
+                    <a href="index.html" target="_blank" class="flex items-center gap-3 text-zinc-400 hover:bg-zinc-900/60 hover:text-white px-4 py-3 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all">
+                        <i class="fas fa-store text-sm"></i><span>View Live Store</span>
+                    </a>
+                </nav>
+            </div>
+            <div class="text-[9px] text-zinc-600 pt-4 border-t border-zinc-900 tracking-widest hidden lg:block">&copy; 2026 MUSTAPHA PARFUME</div>
+        </aside>
+
+        <main class="flex-1 p-6 md:p-10 space-y-8 overflow-y-auto">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-zinc-900 pb-6">
+                <div>
+                    <h2 class="text-xl font-bold uppercase tracking-wider">Operational Command Overview</h2>
+                    <p class="text-xs text-zinc-500 mt-0.5">Control live boutique inventory metrics, track organic visitors, and organize orders.</p>
+                </div>
+                <button onclick="clearData()" class="text-[10px] uppercase font-bold tracking-widest border border-red-950 text-red-400 hover:bg-red-950/20 px-4 py-2 rounded-lg transition-all">
+                    Reset Local Logs
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="bg-zinc-950 border border-zinc-900 p-5 rounded-xl">
+                    <div class="flex items-center justify-between text-zinc-500 mb-2"><span class="text-[10px] uppercase font-bold tracking-wider">Daily Traffic</span><i class="fas fa-users text-amber-500"></i></div>
+                    <div id="statTodayVisitors" class="text-xl font-bold text-white">0 Users</div>
+                </div>
+                <div class="bg-zinc-950 border border-zinc-900 p-5 rounded-xl">
+                    <div class="flex items-center justify-between text-zinc-500 mb-2"><span class="text-[10px] uppercase font-bold tracking-wider">Gross Income</span><i class="fas fa-coins text-[#d4af37]"></i></div>
+                    <div id="statRevenue" class="text-xl font-bold text-white">0 DH</div>
+                </div>
+                <div class="bg-zinc-950 border border-zinc-900 p-5 rounded-xl">
+                    <div class="flex items-center justify-between text-zinc-500 mb-2"><span class="text-[10px] uppercase font-bold tracking-wider">Total Sales</span><i class="fas fa-shopping-bag text-emerald-500"></i></div>
+                    <div id="statOrders" class="text-xl font-bold text-white">0</div>
+                </div>
+                <div class="bg-zinc-950 border border-zinc-900 p-5 rounded-xl">
+                    <div class="flex items-center justify-between text-zinc-500 mb-2"><span class="text-[10px] uppercase font-bold tracking-wider">Active Cities</span><i class="fas fa-map-pin text-sky-500"></i></div>
+                    <div id="statCities" class="text-xl font-bold text-white">0</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="bg-zinc-950 border border-zinc-900 p-6 rounded-xl h-fit space-y-4">
+                    <h3 class="font-bold text-xs uppercase tracking-wider text-[#d4af37]"><i class="fas fa-plus-circle mr-1.5"></i>Add New Item / Pack</h3>
+                    <form id="addProductForm" onsubmit="addNewProduct(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-[9px] uppercase tracking-wider text-zinc-500 mb-1">Item / Pack Title</label>
+                            <input type="text" id="prodName" required placeholder="e.g. Luxury Men Pack" class="w-full bg-black border border-zinc-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-[9px] uppercase tracking-wider text-zinc-500 mb-1">Category & Audience</label>
+                            <select id="prodGender" required class="w-full bg-black border border-zinc-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+                                <option value="For Him">For Him (Men Single Perfume)</option>
+                                <option value="For Her">For Her (Women Single Perfume)</option>
+                                <option value="Pack For Him">Pack For Him (Men's Luxury Pack)</option>
+                                <option value="Pack For Her">Pack For Her (Women's Luxury Pack)</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[9px] uppercase tracking-wider text-zinc-500 mb-1">Price (DH)</label>
+                                <input type="number" id="prodPrice" required placeholder="450" class="w-full bg-black border border-zinc-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] uppercase tracking-wider text-zinc-500 mb-1">Marketing Tag</label>
+                                <input type="text" id="prodTag" placeholder="e.g. BEST OFFER" class="w-full bg-black border border-zinc-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-[9px] uppercase tracking-wider text-zinc-500 mb-1">Pictures (Upload Multiple)</label>
+                            <label for="prodFile" class="flex flex-col items-center justify-center w-full h-24 border border-dashed border-zinc-800 rounded-lg cursor-pointer bg-black/50 hover:bg-zinc-900/40 transition-colors group">
+                                <div class="flex flex-col items-center justify-center pt-3 pb-3">
+                                    <i class="fas fa-images text-zinc-600 group-hover:text-[#d4af37] text-lg mb-1 transition-colors"></i>
+                                    <p class="text-[10px] text-zinc-400 font-medium tracking-wide" id="filePlaceholderText">Select up to 4 images</p>
+                                    <p class="text-[8px] text-zinc-600 uppercase mt-0.5">PNG, JPG (Multi-select allowed)</p>
+                                </div>
+                                <input type="file" id="prodFile" accept="image/*" multiple class="hidden" onchange="previewAndProcessFiles(this)">
+                            </label>
+                            <div id="imagePreviewContainer" class="hidden mt-2 border border-zinc-900 p-2 rounded-lg bg-black space-y-2">
+                                <p class="text-[8px] text-zinc-500 uppercase tracking-widest font-semibold" id="imageCountLabel">0 Images Selected</p>
+                                <div id="previewGrid" class="flex flex-wrap gap-2"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[9px] uppercase tracking-wider text-zinc-500 mb-1">Description / Pack Contents</label>
+                            <textarea id="prodDesc" required rows="2" placeholder="List the perfumes or components included in this pack..." class="w-full bg-black border border-zinc-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#d4af37]"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-[#d4af37] text-black font-bold py-3 rounded-lg text-[10px] uppercase tracking-widest hover:opacity-90 transition-all">Publish Live To Boutique</button>
+                    </form>
+                </div>
+
+                <div class="lg:col-span-2 bg-zinc-950 border border-zinc-900 p-6 rounded-xl">
+                    <h3 class="font-bold text-xs uppercase tracking-wider text-zinc-400 mb-4">Active Boutique Inventory</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b border-zinc-900 text-zinc-500 text-[10px] uppercase tracking-wider">
+                                    <th class="pb-3">Visuals</th>
+                                    <th class="pb-3">Name</th>
+                                    <th class="pb-3">Category</th>
+                                    <th class="pb-3">Tag</th>
+                                    <th class="pb-3">Price</th>
+                                    <th class="pb-3 text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTableBody" class="divide-y divide-zinc-900 text-zinc-300"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-zinc-950 border border-zinc-900 p-6 rounded-xl">
+                <h3 class="font-bold text-xs uppercase tracking-wider text-zinc-400 mb-4">7-Day Visitor Performance Traffic</h3>
+                <div class="h-56 relative"><canvas id="visitorChart"></canvas></div>
+            </div>
+
+            <div class="bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden">
+                <div class="p-5 border-b border-zinc-900 flex items-center justify-between">
+                    <h3 class="font-bold text-xs uppercase tracking-wider text-zinc-400">Incoming Orders Terminal</h3>
+                    <span id="orderCountBadge" class="bg-zinc-900 text-[#d4af37] text-[9px] font-bold tracking-widest uppercase px-3 py-1 rounded-full border border-zinc-800">0 Registered Orders</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-black/40 border-b border-zinc-900 text-zinc-500 text-[10px] uppercase tracking-wider">
+                                <th class="p-4">Invoice ID</th>
+                                <th class="p-4">Date</th>
+                                <th class="p-4">Customer</th>
+                                <th class="p-4">Fragrance / Pack</th>
+                                <th class="p-4">City</th>
+                                <th class="p-4">Revenue</th>
+                                <th class="p-4 text-center">Logistics Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody" class="divide-y divide-zinc-900 text-zinc-300"></tbody>
+                    </table>
+                </div>
+                <div id="emptyState" class="hidden p-12 text-center text-zinc-600 flex flex-col items-center justify-center gap-2">
+                    <i class="fas fa-box-open text-2xl"></i><p class="text-xs uppercase tracking-wider">No transactional data logged.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const defaultProducts = [
+            { id: 1, name: "Royal Oud Intense", price: 250, description: "Deep, mysterious, and highly sophisticated oriental blend with rich amber notes.", images: ["https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=600&q=80"], tag: "BEST SELLER", gender: "For Him" },
+            { id: 2, name: "Oceanic Fresh", price: 220, description: "Crisp citrus, wild sea salt, and clean white musk designed for vibrant daily wear.", images: ["https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=600&q=80"], tag: "FEW ITEMS LEFT", gender: "For Him" },
+            { id: 3, name: "Maison Rose Premium", price: 290, description: "Elegant blooming damask rose, warm patchouli, and sweet crystalline vanilla accord.", images: ["https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600&q=80"], tag: "EXCLUSIVE", gender: "For Her" }
+        ];
+
+        let currentUploadedImagesArray = [];
+
+        document.addEventListener("DOMContentLoaded", function() {
+            if(!localStorage.getItem('mp_inventory')) {
+                localStorage.setItem('mp_inventory', JSON.stringify(defaultProducts));
+            }
+            loadDashboardData();
+            loadInventoryData();
+            loadVisitorAnalytics();
+        });
+
+        function previewAndProcessFiles(input) {
+            const files = Array.from(input.files);
+            currentUploadedImagesArray = [];
+            const previewGrid = document.getElementById('previewGrid');
+            previewGrid.innerHTML = '';
+
+            if (files.length > 0) {
+                files.forEach(file => {
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert(`⚠️ الصورة ${file.name} حجمها كبير جداً! تم تخطيها.`);
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        currentUploadedImagesArray.push(e.target.result);
+                        
+                        const imgNode = document.createElement('img');
+                        imgNode.src = e.target.result;
+                        imgNode.className = "w-10 h-10 object-cover rounded border border-zinc-800";
+                        previewGrid.appendChild(imgNode);
+                        
+                        document.getElementById('imageCountLabel').innerText = `${currentUploadedImagesArray.length} Images Selected`;
+                    };
+                    reader.readAsDataURL(file);
+                });
+                document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                document.getElementById('filePlaceholderText').innerText = "Change Selected Files";
+            }
+        }
+
+        function addNewProduct(e) {
+            e.preventDefault();
+            const name = document.getElementById('prodName').value;
+            const gender = document.getElementById('prodGender').value;
+            const price = parseInt(document.getElementById('prodPrice').value);
+            const tag = document.getElementById('prodTag').value;
+            const desc = document.getElementById('prodDesc').value;
+
+            const imagesToSave = currentUploadedImagesArray.length > 0 ? currentUploadedImagesArray : ['https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600&q=80'];
+
+            const newProd = { 
+                id: Date.now(), 
+                name: name, 
+                gender: gender, 
+                price: price, 
+                description: desc, 
+                images: imagesToSave, 
+                tag: tag.toUpperCase() 
+            };
+            
+            let products = JSON.parse(localStorage.getItem('mp_inventory')) || [];
+            products.push(newProd);
+            localStorage.setItem('mp_inventory', JSON.stringify(products));
+
+            document.getElementById('addProductForm').reset();
+            currentUploadedImagesArray = [];
+            document.getElementById('imagePreviewContainer').classList.add('hidden');
+            document.getElementById('filePlaceholderText').innerText = "Select up to 4 images";
+
+            loadInventoryData();
+            alert(`✨ Success! Item published under category: ${gender}.`);
+        }
+
+        function loadInventoryData() {
+            const products = JSON.parse(localStorage.getItem('mp_inventory')) || [];
+            const tbody = document.getElementById('inventoryTableBody');
+            tbody.innerHTML = '';
+
+            products.forEach(p => {
+                const currentGender = p.gender || 'For Him';
+                
+                let genderStyle = '';
+                if (currentGender === 'For Him') {
+                    genderStyle = 'text-amber-500 bg-amber-950/30 border-amber-900/50';
+                } else if (currentGender === 'For Her') {
+                    genderStyle = 'text-purple-400 bg-purple-950/30 border-purple-900/50';
+                } else if (currentGender === 'Pack For Him') {
+                    genderStyle = 'text-amber-400 bg-gradient-to-r from-amber-950/40 to-yellow-950/40 border-amber-700/60 font-bold';
+                } else if (currentGender === 'Pack For Her') {
+                    genderStyle = 'text-purple-300 bg-gradient-to-r from-purple-950/40 to-pink-950/40 border-purple-700/60 font-bold';
+                }
+                
+                const imgList = p.images || [p.image || 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600&q=80'];
+                let imagesThumbHTML = '<div class="flex -space-x-2 overflow-hidden">';
+                imgList.slice(0, 3).forEach(imgSrc => {
+                    imagesThumbHTML += `<img src="${imgSrc}" class="inline-block h-8 w-8 object-cover rounded-md ring-2 ring-black">`;
+                });
+                if(imgList.length > 3) {
+                    imagesThumbHTML += `<span class="flex items-center justify-center h-8 w-8 rounded-md ring-2 ring-black bg-zinc-900 text-[8px] text-zinc-400 font-bold">+${imgList.length - 3}</span>`;
+                }
+                imagesThumbHTML += '</div>';
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-zinc-900/30 transition-colors">
+                        <td class="py-2.5">${imagesThumbHTML}</td>
+                        <td class="py-2.5 font-medium text-white">${p.name}</td>
+                        <td class="py-2.5"><span class="text-[9px] tracking-wider border px-2.5 py-0.5 rounded-full ${genderStyle}">${currentGender}</span></td>
+                        <td class="py-2.5"><span class="text-[9px] font-bold tracking-wider text-zinc-400 bg-zinc-900 border border-zinc-800 px-2 py-0.5 rounded-full">${p.tag || 'NONE'}</span></td>
+                        <td class="py-2.5 font-bold text-[#d4af37]">${p.price} DH</td>
+                        <td class="py-2.5 text-right">
+                            <button onclick="deleteProduct(${p.id})" class="text-[10px] text-red-400 font-medium hover:text-red-300 border border-red-950 px-2.5 py-1 rounded-md transition-colors">Delete</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function deleteProduct(id) {
+            if(confirm("Remove this item from store?")) {
+                let products = JSON.parse(localStorage.getItem('mp_inventory')) || [];
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('mp_inventory', JSON.stringify(products));
+                loadInventoryData();
+            }
+        }
+
+        function loadDashboardData() {
+            const orders = JSON.parse(localStorage.getItem('mp_orders')) || [];
+            const tableBody = document.getElementById('ordersTableBody');
+            const emptyState = document.getElementById('emptyState');
+            
+            document.getElementById('statOrders').innerText = orders.length;
+            document.getElementById('orderCountBadge').innerText = `${orders.length} Registered Orders`;
+
+            if (orders.length === 0) {
+                tableBody.innerHTML = ''; emptyState.classList.remove('hidden');
+                document.getElementById('statRevenue').innerText = "0 DH";
+                document.getElementById('statCities').innerText = "0";
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            let totalRevenue = 0; let uniquelyTrackedCities = new Set(); let tableHTML = '';
+
+            orders.forEach((order) => {
+                totalRevenue += Number(order.price) || 0;
+                if(order.city) uniquelyTrackedCities.add(order.city.toLowerCase().trim());
+
+                tableHTML += `
+                    <tr class="hover:bg-zinc-900/20">
+                        <td class="p-4 font-mono text-[11px] text-zinc-600">${order.id}</td>
+                        <td class="p-4 text-zinc-500">${order.date}</td>
+                        <td class="p-4 font-medium text-white">${order.customer}</td>
+                        <td class="p-4 text-[#d4af37] font-medium">✨ ${order.perfume}</td>
+                        <td class="p-4 text-zinc-400">${order.city}</td>
+                        <td class="p-4 font-bold text-white">${order.price} DH</td>
+                        <td class="p-4 text-center">
+                            <select onchange="updateStatus('${order.id}', this.value)" class="text-[11px] bg-black border border-zinc-800 rounded-md p-1.5 text-zinc-300 focus:outline-none focus:border-[#d4af37]">
+                                <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>⏳ Pending</option>
+                                <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>🚚 Shipped</option>
+                                <option value="Completed" ${order.status === 'Completed' ? 'selected' : ''}>✅ Completed</option>
+                            </select>
+                        </td>
+                    </tr>`;
+            });
+
+            tableBody.innerHTML = tableHTML;
+            document.getElementById('statRevenue').innerText = `${totalRevenue} DH`;
+            document.getElementById('statCities').innerText = uniquelyTrackedCities.size;
+        }
+
+        function updateStatus(orderId, newStatus) {
+            let orders = JSON.parse(localStorage.getItem('mp_orders')) || [];
+            orders = orders.map(order => { if (order.id === orderId) order.status = newStatus; return order; });
+            localStorage.setItem('mp_orders', JSON.stringify(orders));
+            loadDashboardData();
+        }
+
+        async function loadVisitorAnalytics() {
+            const labels = []; const visitorData = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(); d.setDate(d.getDate() - i);
+                labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                visitorData.push(Math.floor(Math.random() * 8 + 3));
+            }
+            document.getElementById('statTodayVisitors').innerText = visitorData[visitorData.length - 1] + " Users";
+
+            const ctx = document.getElementById('visitorChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{ data: visitorData, borderColor: '#d4af37', backgroundColor: 'rgba(212, 175, 55, 0.01)', borderWidth: 1.5, tension: 0.3, fill: true, pointRadius: 2, pointBackgroundColor: '#d4af37' }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255, 255, 255, 0.02)' }, ticks: { color: '#52525b' } }, x: { grid: { display: false }, ticks: { color: '#52525b' } } } }
+            });
+        }
+
+        function clearData() { if (confirm("Clear all metrics?")) { localStorage.removeItem('mp_orders'); loadDashboardData(); } }
+    </script>
+</body>
+</html>
